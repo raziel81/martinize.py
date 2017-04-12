@@ -493,6 +493,10 @@ class Topology:
             for i in breaks:
                 bb[i]   = "Qd"
                 bb[i-1] = "Qa"
+        #override termini code for the case of GYM since its located in the N-termini and is defined as an Nda bead 
+        gym_flag = self.sequence[0]
+        if gym_flag == "GYM":
+                bb[0]    = "Nda"
 
         # For backbone parameters, iterate over fragments, inferred from breaks
         for i, j in zip([0]+breaks, breaks+[-1]):
