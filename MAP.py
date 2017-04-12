@@ -11,14 +11,17 @@ rnares1 = " rA rC rG rU"
 
 # Amino acid nucleic acid codes:
 # The naming (AA and '3') is not strictly correct when adding DNA/RNA, but we keep it like this for consistincy.
-AA3     = FUNC.spl("TRP TYR PHE HIS HIH ARG LYS CYS ASP GLU ILE LEU MET ASN PRO HYP GLN SER THR VAL ALA GLY"+dnares3+rnares3) #@#
-AA1     = FUNC.spl("  W   Y   F   H   H   R   K   C   D   E   I   L   M   N   P   O   Q   S   T   V   A   G"+dnares1+rnares1) #@#
+#AA3     = FUNC.spl("TRP TYR PHE HIS HIH ARG LYS CYS ASP GLU ILE LEU MET ASN PRO HYP GLN SER THR VAL ALA GLY"+dnares3+rnares3) #@#
+AA3     = spl("TRP TYR PHE HIS HIH ARG LYS CYP CYS CYF CYG ASP GLU ILE LEU MET ASN PRO HYP GLN SER THR VAL ALA GLY GYM"+dnares3+rnares3) #added CYP, CYF , CYG and GYM as 3 letter codes for the modified amino acids
+AA1     = spl("  W   Y   F   H   H   R   K   J   C   B   X    D   E   I   L   M   N   P   O   Q   S   T   V   A   G   Z"+dnares1+rnares1) #@#  #added single letter codes for CYP, CYF, CYG, GYM - J,B,X,Z
+#AA1     = FUNC.spl("  W   Y   F   H   H   R   K   C   D   E   I   L   M   N   P   O   Q   S   T   V   A   G"+dnares1+rnares1) #@#
 
 # Dictionaries for conversion from one letter code to three letter code v.v.
 AA123, AA321 = FUNC.hash(AA1, AA3), FUNC.hash(AA3, AA1)
 
+
 # Residue classes:
-protein = AA3[:-8]   # remove eight to get rid of DNA/RNA here.
+protein = AA3[:-8]    # remove eight to get rid of DNA/RNA here.
 water   = FUNC.spl("HOH SOL TIP")
 lipids  = FUNC.spl("DPP DHP DLP DMP DSP POP DOP DAP DUP DPP DHP DLP DMP DSP PPC DSM DSD DSS")
 nucleic = FUNC.spl("DAD DCY DGU DTH ADE CYT GUA THY URA DA DC DG DT")
@@ -40,6 +43,7 @@ class CoarseGrained:
     # Standard mapping groups
     # Protein backbone
     bb        = "N CA C O H H1 H2 H3 O1 O2"                                                                    #@#
+#    bb_glym   = "N CA C O HN HA1 HA2"                                                                    #@#
     # Lipid tails
     palmitoyl1    = FUNC.nsplit("C1B C1C C1D C1E", "C1F C1G C1H C1I", "C1J C1K C1L C1M", "C1N C1O C1P")              #@#
     palmitoyl2    = FUNC.nsplit("C2B C2C C2D C2E", "C2F C2G C2H C2I", "C2J C2K C2L C2M", "C2N C2O C2P")              #@#
@@ -72,10 +76,14 @@ class CoarseGrained:
     mapping = {
         "ALA":  FUNC.nsplit(bb + " CB"),
         "CYS":  FUNC.nsplit(bb, "CB SG"),
+        "CYF":  FUNC.nsplit(bb, "CB SG C1 C2", "C3 C4 C5 C6", "C7 C8 C9 C10","C11 C12 C13", "C13 C14 C15"),
+        "CYP":  FUNC.nsplit(bb, "CB SG C1 O", "C2 C3 C4 C5", "C6 C7 C8 C9", "C10 C11 C12 C13", "C14 C15 C16"),
+        "CYG":  FUNC.nsplit(bb, "CB SG C1 C2", "C2 C3 C5 C6", "C7 C8 C9 C10", "C11 C12 C13 C14", "C15 C16 C17", "C18 C19 C20"),
         "ASP":  FUNC.nsplit(bb, "CB CG OD1 OD2"),
         "GLU":  FUNC.nsplit(bb, "CB CG CD OE1 OE2"),
         "PHE":  FUNC.nsplit(bb, "CB CG CD1 HD1", "CD2 HD2 CE2 HE2", "CE1 HE1 CZ HZ"),
         "GLY":  FUNC.nsplit(bb),
+        "GYM":  FUNC.nsplit(bb, "C1 OL C2", "C3 C4 C5 C6", "C7 C8 C9 C10", "C11 C12 C13 C14"),
         "HIS":  FUNC.nsplit(bb, "CB CG", "CD2 HD2 NE2 HE2", "ND1 HD1 CE1 HE1"),
         "HIH":  FUNC.nsplit(bb, "CB CG", "CD2 HD2 NE2 HE2", "ND1 HD1 CE1 HE1"),     # Charged Histidine.
         "ILE":  FUNC.nsplit(bb, "CB CG1 CG2 CD CD1"),
@@ -105,7 +113,7 @@ class CoarseGrained:
         }
 
     # Generic names for side chain beads
-    residue_bead_names = FUNC.spl("BB SC1 SC2 SC3 SC4")
+    residue_bead_names = FUNC.spl("BB SC1 SC2 SC3 SC4 SC5 SC6 SC7")
     # Generic names for DNA beads
     residue_bead_names_dna = FUNC.spl("BB1 BB2 BB3 SC1 SC2 SC3 SC4")
 
@@ -116,7 +124,7 @@ class CoarseGrained:
         "POPG": "GLC PO4 GL1 GL2 C1A C2A C3A C4A C1B C2B D3B C4B C5B".split()
         }
     # Add default bead names for all amino acids
-    names.update([(i, ("BB", "SC1", "SC2", "SC3", "SC4")) for i in AA3])
+    names.update([(i, ("BB", "SC1", "SC2", "SC3", "SC4", "SC5", "SC6", "SC7")) for i in AA3])
 
     # Add the default bead names for all DNA nucleic acids
     names.update([(i, ("BB1", "BB2", "BB3", "SC1", "SC2", "SC3", "SC4")) for i in nucleic])
