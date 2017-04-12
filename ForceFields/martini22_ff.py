@@ -9,6 +9,7 @@
 #   Phe sidechain
 #   Trp sidechain
 #   Helix BB-bonds to constraint      
+#   Lipidated amino acids - cysteine geranylgeranyl, cysteine farnesyl, cysteine palmitoyl and glycine myrisotyl
 
 class martini22:
     ff = True
@@ -30,7 +31,7 @@ class martini22:
         # bbdef lists the corresponding default backbone beads
         # bbtyp lists the corresponding residue specific backbone beads
         #
-        # bbd   lists the structure specific backbone bond lengths
+        # bbd   lists the structure specific 
         # bbkb  lists the corresponding bond force constants
         #
         # bba   lists the structure specific angles
@@ -55,7 +56,8 @@ class martini22:
         self.bbtyp    = {                                                                   #                 #@#
                     "ALA": FUNC.spl(" C5    N0    C5    N0    N0    N0    N0    P4    P4"), # ALA specific    #@#
                     "PRO": FUNC.spl(" C5    N0    C5    N0    Na    N0    N0    P4    P4"), # PRO specific    #@#
-                    "HYP": FUNC.spl(" C5    N0    C5    N0    N0    N0    N0    P4    P4")  # HYP specific    #@#
+                    "HYP": FUNC.spl(" C5    N0    C5    N0    N0    N0    N0    P4    P4"), # HYP specific    #@#
+                    "GYM": FUNC.spl("Nda   Nda   Nda   Nda   Nda   Nda   Nda   Nda   Nda")  # GYM bead defintions
         }                                                                                   #                 #@#
         ## BONDS ##                                                                         #                 
         self.bbldef   =             (.365, .350, .310, .310, .310, .310, .350, .350, .350)  # BB bond lengths #@#
@@ -115,6 +117,9 @@ class martini22:
             "ARG": [FUNC.spl("N0 Qd"),          [(0.330,5000), (0.340,5000)],                           [(180,25)]],
             "LYS": [FUNC.spl("C3 Qd"),          [(0.330,5000), (0.280,5000)],                           [(180,25)]],
             "CYS": [FUNC.spl("C5"),             [(0.310,7500)]],
+            "CYP": [FUNC.spl("C5 C1 C1 C1 C1"), [(0.380,8000), (0.39,5000), (0.47,4500), (0.47,4500), (0.41,5500)],[(150,35),(125,25),(180,25),(180,28)]],
+            "CYF": [FUNC.spl("C5 C3 C3 C3 C3"), [(0.390,8000), (0.420,6000), (0.43,5000), (0.31,12000), (0.23,15000)],[(180,65),(125,42),(130,48),(170,50)]],
+            "CYG": [FUNC.spl("C5 C1 C1 C1 C1 C1"), [(0.380, 8500),  (0.420,6000), (0.420,7750), (0.41,7000), (0.40,9000), (0.24,8000)],[(150,50),(125,55),(130,45),(180,38),(180,75)]],              
             "ASP": [FUNC.spl("Qa"),             [(0.320,7500)]],
             "GLU": [FUNC.spl("Qa"),             [(0.400,5000)]],
             "ILE": [FUNC.spl("AC1"),            [(0.310,None)]],
@@ -129,6 +134,7 @@ class martini22:
             "VAL": [FUNC.spl("AC2"),            [(0.265,None)]],
             "ALA": [],
             "GLY": [],
+            "GYM": [FUNC.spl("C1 C1 C1 C1"),    [(0.36,7500),(0.47,3000),(0.47,4000),(0.36,5000)],                  [(140,30),(160,38),(175,45)]],
             }
         
         # Not all (eg Elnedyn) forcefields use backbone-backbone-sidechain angles and BBBB-dihedrals.
@@ -161,6 +167,9 @@ class martini22:
         "ASP":     [[(0,1)]],
         "GLU":     [[(0,1)]],
         "CYS":     [[(0,1)]],
+        "CYP":     [[(0,1),(1,2),(2,3),(3,4),(4,5)], [(0,1,2),(1,2,3),(2,3,4),(3,4,5)]],         
+        "CYF":     [[(0,1),(1,2),(2,3),(3,4),(4,5)], [(0,1,2),(1,2,3),(2,3,4),(3,4,5)]],
+        "CYG":     [[(0,1),(1,2),(2,3),(3,4),(4,5),(5,6)], [(0,1,2),(1,2,3),(2,3,4),(3,4,5),(4,5,6)]],
         "ILE":     [[(0,1)]],
         "LEU":     [[(0,1)]],
         "MET":     [[(0,1)]],
@@ -169,6 +178,7 @@ class martini22:
         "VAL":     [[(0,1)]],
         "ALA":     [],
         "GLY":     [],
+        "GYM":     [[(0,1),(1,2),(2,3),(3,4)], [(0,1,2),(1,2,3),(2,3,4)]],
         }
         
         #----+----------------+
